@@ -1,8 +1,10 @@
 const User = require('../models/userModel');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = "4715aed3c946f7b0lokoa38e6b534astan958362x8d84e96d10fbc04700770d572af3dce43625dd"
 
-// Créer un nouvel utilisateur
+// Create users
 exports.createUser = async (req, res) => {
   try {
     const { firstname, lastname, email, password } = req.body;
@@ -35,36 +37,57 @@ exports.createUser = async (req, res) => {
     const user = await newUser.save();
     res.status(201).json(user);
   } catch (err) {
-    res.status(400).json({ error: 'Informations incorrectes' });
+    res.status(400).json({ error: 'Incorrect information' });
   }
 };
 
-
-// Récupérer tous les utilisateurs
+// Get all users
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({}, '-password');
     res.status(200).json(users);
   } catch (err) {
-    res.status(500).json({ error: 'Impossible de récupérer les utilisateurs' });
+    res.status(500).json({ error: 'Unable to retrieve users' });
   }
 };
 
-
-
-// Récupérer un utilisateur par son ID
+// Get user by Id
 exports.getUserById = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId, '-password');
     res.status(200).json(user);
   } catch (err) {
-    res.status(400).json({ error: 'Impossible de récupérer l\'utilisateur' });
+    res.status(400).json({ error: 'Unable to retrieve user' });
   }
 };
 
+// User Authentification
 
-// Mettre à jour un utilisateur
+exports.userLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Wrong password' });
+    }
+
+    const token = jwt.sign({ userId: user._id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
+    res.status(200).json({ token: token });
+  } catch (err) {
+    res.status(500).json({ error: 'Error while authenticating' });
+  }
+};
+
+// Update user
 exports.updateUser = async (req, res) => {
   const userId = req.params.id;
   const { firstname, lastname, email, Password } = req.body;
@@ -73,11 +96,11 @@ exports.updateUser = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(userId, { firstname, lastname, email, Password }, { new: true });
     res.status(200).json(updatedUser);
   } catch (err) {
-    res.status(500).json({ error: 'Impossible de mettre à jour l\'utilisateur' });
+    res.status(500).json({ error: 'Unable to update user' });
   }
 };
 
-// Supprimer un utilisateur
+// Delete User
 exports.deleteUser = async (req, res) => {
   const userId = req.params.id;
 
