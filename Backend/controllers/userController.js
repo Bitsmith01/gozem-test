@@ -54,6 +54,7 @@ exports.getAllUsers = async (req, res) => {
 // Get user by Id
 exports.getUserById = async (req, res) => {
   const userId = req.params.id;
+  console.log(userId);
   try {
     const user = await User.findById(userId, '-password');
     res.status(200).json(user);
@@ -62,7 +63,46 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-// User Authentification
+// Get user home screen data
+exports.getHomscreen = async (req, res) => {
+  const userId = req.user.userId;
+  console.log(userId);
+  try {
+    const user = await User.findById(userId, '-password');
+    // Formatez les données comme requis
+    const homeScreenData = [
+      {
+        type: "profile",
+        content: {
+          image: user.profileImage,
+          name: user.firstname + ' ' + user.lastname,
+          email: user.email
+        }
+      },
+      {
+        type: "map",
+        content: {
+          title: "Location",
+          pin: "locationData.pin", 
+          lat: "locationData.latitude", 
+          lng: "locationData.longitude //"
+        }
+      },
+      {
+        type: "data",
+        content: {
+          title: "Information",
+          source: "wss://echo.websocket.org",
+          value: "Loading..."
+        }
+      }
+    ];
+
+    res.status(200).json(homeScreenData);
+  } catch (err) {
+    res.status(400).json({ error: 'Unable to retrieve user' });
+  }
+}
 
 exports.userLogin = async (req, res) => {
   const { email, password } = req.body;
