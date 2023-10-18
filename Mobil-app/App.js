@@ -14,9 +14,9 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Onbroading'>
         <Stack.Screen name="Onbroading" component={Onbroading} options={{ headerShown: false }} />
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );
