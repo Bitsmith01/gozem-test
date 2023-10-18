@@ -15,15 +15,14 @@ const Onboarding = ({ navigation }) => {
         style={styles.Linear}
       >
         <Text style={styles.Welcome}>
-          Bienvenue champion !
+          Welcome, champion !
         </Text>
         <Text style={styles.subtitle}>
-          Rejoins notre communauté de livreurs et booste tes revenus de manière exceptionnelle. 
-          Prépare-toi pour une aventure passionnante ! Rejoins-nous dès maintenant !
+          Join our community of drivers and boost your earnings exceptionally. Get ready for an exciting adventure! Join us now!
         </Text>
         <TouchableOpacity style={styles.inscription} onPress={handleInscriptionClick}>
           <Text>
-            Inscription
+            Sign Up
           </Text>
         </TouchableOpacity>
       </LinearGradient>
@@ -43,7 +42,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     marginTop: 20,
-    marginBottom: 20
+    marginBottom: 20,
+    marginHorizontal:5
   },
   Linear: {
     height: "70%",

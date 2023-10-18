@@ -1,0 +1,1 @@
+exports.apiUrl = 'http://192.168.102.93:5000/api/users'
