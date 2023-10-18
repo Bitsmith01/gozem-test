@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const Onboarding = ({ navigation }) => {
 
   const handleInscriptionClick = () => {
-    navigation.navigate('Register');
+    navigation.navigate('Login');
   };
 
   return (

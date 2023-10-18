@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import React from 'react'
 import { apiUrl } from '../Constantes';
 
-const Register = () => {
+const Register = ({navigation}) => {
 
   const SignupSchema = Yup.object().shape({
     lastname: Yup.string()
@@ -72,16 +72,18 @@ const Register = () => {
                 email: '',
               }}
               onSubmit={async (values, { setSubmitting }) => {
-                const { lastname, firstname, email, password } = values;
-                const userData = {
-                  lastname,
-                  firstname,
-                  email,
-                  password,
-                };
-                console.log(userData);
-                await createUser(userData);
-                setSubmitting(false);
+                // const { lastname, firstname, email, password } = values;
+                // const userData = {
+                //   lastname,
+                //   firstname,
+                //   email,
+                //   password,
+                // };
+                // console.log(userData);
+                navigation.navigate('Login');
+
+                // await createUser(userData);
+                // setSubmitting(false);
               }}
             >
               {({ handleSubmit, values, errors, touched, handleChange, isValid, setFieldTouched, handleBlur }) => (
