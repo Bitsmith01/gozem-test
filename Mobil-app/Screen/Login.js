@@ -6,36 +6,14 @@ import { apiUrl } from '../Constantes';
 
 const Login = ({ navigation }) => {
 
-  const SignupSchema = Yup.object().shape({
-    lastname: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('Your First name\'s required !'),
-    firstname: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('Your Last name\'s required !'),
-    password: Yup.string()
-      .min(8, 'Too Short!')
-      .max(50, 'Too Long!')
-      .matches(
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-        'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character, and must be at least 8 characters long.'
-      )
-      .required('A password\'s required !'),
-    confirmPassword: Yup.string()
-      .min(8, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('Required')
-      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    email: Yup.string()
-      .email('Invalid Email')
-      .required('Your email\'s required'),
+  const LoginSchema = Yup.object().shape({
+    email: Yup.string().email('Email invalide').required('Email requis'),
+    password: Yup.string().required('Mot de passe requis'),
   });
 
   const createUser = async (userData) => {
     try {
-      const url = "http://192.168.102.93:5000/api/users/register";
+      const url = `${apiUrl}/Login`;
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -45,13 +23,13 @@ const Login = ({ navigation }) => {
       });
 
       if (response.ok) {
-        console.log('User created successfully');
-        navigation.navigate('Login');
+        console.log('User Login successfully');
+        navigation.navigate('Home');
       } else {
-        console.error('Failed to create the user');
+        console.error('Failed to log the user');
       }
     } catch (error) {
-      console.error('Error creating the user:', error);
+      console.error('Error login the user:', error);
     }
   };
 
@@ -62,19 +40,14 @@ const Login = ({ navigation }) => {
       <View style={styles.formSection}>
         <View style={{ flex: 1 }}>
           <Formik
-            validationSchema={SignupSchema}
+            validationSchema={LoginSchema}
             initialValues={{
-              lastname: '',
-              firstname: '',
-              password: '',
-              confirmPassword: '',
               email: '',
+              password: '',
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              const { lastname, firstname, email, password } = values;
+              const { email, password } = values;
               const userData = {
-                lastname,
-                firstname,
                 email,
                 password,
               };
@@ -115,7 +88,7 @@ const Login = ({ navigation }) => {
 
                 {touched.password && errors.password && <Text style={styles.erro}>{errors.password}</Text>}
 
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop:20 }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
                   <TouchableOpacity style={styles.signupButton} onPress={handleSubmit}>
                     <Text style={{ textAlign: 'center', color: 'white' }}>
                       Sign In
@@ -126,7 +99,6 @@ const Login = ({ navigation }) => {
             )}
           </Formik>
         </View>
-
       </View>
     </View>
   )
@@ -145,7 +117,7 @@ const styles = StyleSheet.create({
   logo: {
     height: 300,
     width: 300,
-    marginVertical:45
+    marginVertical: 45
 
   },
   formSection: {
@@ -155,8 +127,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     padding: 20,
-    paddingTop:60,
-    justifyContent:'center'
+    paddingTop: 60,
+    justifyContent: 'center'
   },
   textH: {
     fontSize: 25,

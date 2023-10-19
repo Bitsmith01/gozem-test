@@ -35,7 +35,8 @@ const Register = ({navigation}) => {
 
   const createUser = async (userData) => {
     try {
-      const url = "http://192.168.102.93:5000/api/users/register";
+      const url = `${apiUrl}/Register`;
+      console.log(url);
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -72,18 +73,16 @@ const Register = ({navigation}) => {
                 email: '',
               }}
               onSubmit={async (values, { setSubmitting }) => {
-                // const { lastname, firstname, email, password } = values;
-                // const userData = {
-                //   lastname,
-                //   firstname,
-                //   email,
-                //   password,
-                // };
-                // console.log(userData);
-                navigation.navigate('Login');
-
-                // await createUser(userData);
-                // setSubmitting(false);
+                const { lastname, firstname, email, password } = values;
+                const userData = {
+                  lastname,
+                  firstname,
+                  email,
+                  password,
+                };
+                console.log(userData);
+                await createUser(userData);
+                setSubmitting(false);
               }}
             >
               {({ handleSubmit, values, errors, touched, handleChange, isValid, setFieldTouched, handleBlur }) => (
