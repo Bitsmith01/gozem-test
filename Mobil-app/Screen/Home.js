@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
@@ -57,11 +57,26 @@ const Home = () => {
                     />
                 )}
             </MapView>
-            <View style={styles.overlay}>
-                <Text style={styles.overlayText}>Superposition</Text>
+            <View style={styles.overlay1}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image source={require('../assets/profi.png')} style={{ height: 50, width: 50, borderRadius: 25 }} />
+                    <View style={{ marginLeft: 5 }}>
+                        <Text>Jonh Doe</Text>
+                        <Text>doejonh@gmail.com</Text>
+                    </View>
+                </View>
                 <TouchableOpacity>
                     <Feather name="log-out" size={24} color="#179138" />
                 </TouchableOpacity>
+            </View>
+            <View style={styles.overlay2}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ marginLeft: 5 }}>
+                        <Text>Information :</Text>
+                        <Text>longitude: </Text>
+                        <Text>latitude: </Text>
+                    </View>
+                </View>
             </View>
         </View>
     );
@@ -76,7 +91,20 @@ const styles = StyleSheet.create({
     map: {
         flex: 1,
     },
-    overlay: {
+    overlay2: {
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: 0,
+        height: 120,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 1)',
+        padding: 10,
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+        width: '100%'
+    },
+    overlay1: {
         flexDirection: 'row',
         position: 'absolute',
         top: 60,
@@ -86,7 +114,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: 'rgba(255, 255, 255, 1)',
-        padding: 20,
+        padding: 10,
         borderRadius: 20,
     },
     overlayText: {
