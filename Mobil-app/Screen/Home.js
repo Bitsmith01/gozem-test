@@ -72,9 +72,9 @@ const Home = () => {
             <View style={styles.overlay2}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ marginLeft: 5 }}>
-                        <Text>Information :</Text>
-                        <Text>longitude: </Text>
-                        <Text>latitude: </Text>
+                        <Text style={{ marginVertical: 5 }}>Information :</Text>
+                        <Text style={{ marginVertical: 5 }}>Longitude: {position.longitude}</Text>
+                        <Text style={{ marginVertical: 5 }}>Latitude: {position.latitude}</Text>
                     </View>
                 </View>
             </View>
