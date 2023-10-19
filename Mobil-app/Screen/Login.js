@@ -1,7 +1,8 @@
 import { Button, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import React from 'react'
+import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import { apiUrl } from '../Constantes';
 
 const Login = ({ navigation }) => {
@@ -11,7 +12,7 @@ const Login = ({ navigation }) => {
     password: Yup.string().required('Mot de passe requis'),
   });
 
-  const createUser = async (userData) => {
+  const logUser = async (userData) => {
     try {
       const url = `${apiUrl}/Login`;
       const response = await fetch(url, {
@@ -52,7 +53,7 @@ const Login = ({ navigation }) => {
                 password,
               };
               console.log(userData);
-              await createUser(userData);
+              await logUser(userData);
               setSubmitting(false);
             }}
           >
