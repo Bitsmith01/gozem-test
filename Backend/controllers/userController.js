@@ -7,7 +7,7 @@ const SECRET_KEY = "4715aed3c946f7b0lokoa38e6b534astan958362x8d84e96d10fbc047007
 // Create users
 exports.createUser = async (req, res) => {
   try {
-    const { firstname, lastname, email, password } = req.body;
+    const { firstname, lastname, email, password, image } = req.body;
 
     if (!validator.isAlpha(firstname)) {
       return res.status(400).json({ error: 'First name should contain only letters' });
@@ -31,7 +31,8 @@ exports.createUser = async (req, res) => {
       firstname: firstname,
       lastname: lastname,
       email: email,
-      password: hashedPassword
+      password: hashedPassword,
+      image: image
     });
 
     const user = await newUser.save();
@@ -64,45 +65,94 @@ exports.getUserById = async (req, res) => {
 };
 
 // Get user home screen data
-exports.getHomscreen = async (req, res) => {
+// exports.getHomscreen = async (req, res) => {
+//   const userId = req.user.userId;
+//   console.log(userId);
+//   try {
+//     const user = await User.findById(userId, '-password');
+//     console.log(user);
+
+//     if (user) {
+//       const homeScreenData = [
+//         {
+//           type: "profile",
+//           content: {
+//             image: user.image,
+//             name: `${user.firstname} ${user.lastname}`,
+//             email: user.email,
+//           }
+//         },
+//         {
+//           type: "map",
+//           content: {
+//             title: "Location",
+//             pin: user.image,
+//           }
+//         },
+//         {
+//           type: "data",
+//           content: {
+//             title: "Information",
+//             source: "wss://echo.websocket.org",
+//             value: "Loading..."
+//           }
+//         }
+//       ];
+
+//       res.status(200).json(homeScreenData);
+//     } else {
+//       res.status(404).json({ error: 'User not found' });
+//     }
+//   } catch (err) {
+//     res.status(500).json({ error: 'Unable to retrieve user' });
+//   }
+// }
+
+exports.Homscreen = async (req, res) => {
   const userId = req.user.userId;
   console.log(userId);
   try {
     const user = await User.findById(userId, '-password');
-    // Formatez les données comme requis
-    const homeScreenData = [
-      {
-        type: "profile",
-        content: {
-          image: user.profileImage,
-          name: user.firstname + ' ' + user.lastname,
-          email: user.email
-        }
-      },
-      {
-        type: "map",
-        content: {
-          title: "Location",
-          pin: "locationData.pin", 
-          lat: "locationData.latitude", 
-          lng: "locationData.longitude //"
-        }
-      },
-      {
-        type: "data",
-        content: {
-          title: "Information",
-          source: "wss://echo.websocket.org",
-          value: "Loading..."
-        }
-      }
-    ];
+    console.log(user);
 
-    res.status(200).json(homeScreenData);
+    if (user) {
+      const homeScreenData = [
+        {
+          type: "profile",
+          content: {
+            image: user.image,
+            name: `${user.firstname} ${user.lastname}`,
+            email: user.email,
+          }
+        },
+        {
+          type: "map",
+          content: {
+            title: "Location",
+            pin: user.image,
+          }
+        },
+        {
+          type: "data",
+          content: {
+            title: "Information",
+            source: "wss://echo.websocket.org",
+            value: "Loading..."
+          }
+        }
+      ];
+
+      console.log(homeScreenData);
+
+      res.status(200).json(homeScreenData);
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
   } catch (err) {
-    res.status(400).json({ error: 'Unable to retrieve user' });
+    res.status(500).json({ error: 'Unable to retrieve user' });
   }
 }
+
 
 exports.userLogin = async (req, res) => {
   const { email, password } = req.body;

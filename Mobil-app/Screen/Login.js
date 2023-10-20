@@ -7,6 +7,8 @@ import { apiUrl } from '../Constantes';
 
 const Login = ({ navigation }) => {
 
+  
+
   const handleTextClick = () => {
     navigation.navigate('Register')
   };
@@ -28,6 +30,12 @@ const Login = ({ navigation }) => {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+        const token = responseData.token;
+        console.log(token);
+
+        await AsyncStorage.setItem('userToken', token);
+
         console.log('User Login successfully');
         navigation.navigate('Home');
       } else {
