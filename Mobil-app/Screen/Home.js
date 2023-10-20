@@ -3,7 +3,6 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Home = () => {
     const [position, setPosition] = useState({

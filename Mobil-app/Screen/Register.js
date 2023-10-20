@@ -2,9 +2,8 @@ import { Button, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacit
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import React from 'react'
-import { apiUrl } from '../Constantes';
 
-const Register = ({navigation}) => {
+const Register = ({ navigation }) => {
 
   const SignupSchema = Yup.object().shape({
     lastname: Yup.string()
@@ -34,26 +33,11 @@ const Register = ({navigation}) => {
   });
 
   const createUser = async (userData) => {
-    try {
-      const url = `${apiUrl}/Register`;
-      console.log(url);
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+    navigation.navigate('Profil', { userData })
+  };
 
-      if (response.ok) {
-        console.log('User created successfully');
-        navigation.navigate('Login');
-      } else {
-        console.error('Failed to create the user');
-      }
-    } catch (error) {
-      console.error('Error creating the user:', error);
-    }
+  const handleTextClick = () => {
+    navigation.navigate('Login')
   };
 
 
@@ -141,6 +125,7 @@ const Register = ({navigation}) => {
                   <TextInput
                     name="password"
                     placeholder='   ******'
+                    secureTextEntry={true}
                     onChangeText={handleChange('password')}
                     onBlur={handleBlur('password')}
                     value={values.password}
@@ -159,6 +144,7 @@ const Register = ({navigation}) => {
                   <TextInput
                     name="confirmPassword"
                     placeholder='   ******'
+                    secureTextEntry={true}
                     onChangeText={handleChange('confirmPassword')}
                     onBlur={handleBlur('confirmPassword')}
                     value={values.confirmPassword}
@@ -168,8 +154,11 @@ const Register = ({navigation}) => {
                   <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <TouchableOpacity style={styles.signupButton} onPress={handleSubmit}>
                       <Text style={{ textAlign: 'center', color: 'white' }}>
-                        Sign Up
+                        Next step
                       </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleTextClick}>
+                      <Text style={{ marginTop: 15, textDecorationLine: 'underline' }}>Already have account ?</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -220,7 +209,7 @@ const styles = StyleSheet.create({
   },
   signupButton: {
     display: 'flex',
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: "#179138",
     height: 45,
     width: 124,

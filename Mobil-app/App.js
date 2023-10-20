@@ -6,6 +6,7 @@ import Home from './Screen/Home';
 import Login from './Screen/Login';
 import Register from './Screen/Register';
 import Onbroading from './Screen/Onbroading';
+import Profil from './Screen/Profil';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ export default function App() {
       <Stack.Navigator initialRouteName='Onbroading'>
         <Stack.Screen name="Onbroading" component={Onbroading} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+        <Stack.Screen name="Profil" component={Profil} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
         <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
       </Stack.Navigator>

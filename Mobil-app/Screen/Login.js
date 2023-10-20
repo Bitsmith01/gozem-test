@@ -2,10 +2,14 @@ import { Button, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacit
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import React from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiUrl } from '../Constantes';
 
 const Login = ({ navigation }) => {
+
+  const handleTextClick = () => {
+    navigation.navigate('Register')
+  };
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email invalide').required('Email requis'),
@@ -79,6 +83,7 @@ const Login = ({ navigation }) => {
                   Password
                 </Text>
                 <TextInput
+                  secureTextEntry={true}
                   name="password"
                   placeholder='   ******'
                   onChangeText={handleChange('password')}
@@ -94,6 +99,9 @@ const Login = ({ navigation }) => {
                     <Text style={{ textAlign: 'center', color: 'white' }}>
                       Sign In
                     </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleTextClick}>
+                    <Text style={{ marginTop: 15, textDecorationLine: 'underline' }}>Create account ?</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -145,7 +153,7 @@ const styles = StyleSheet.create({
   },
   signupButton: {
     display: 'flex',
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: "#179138",
     height: 45,
     width: 124,
