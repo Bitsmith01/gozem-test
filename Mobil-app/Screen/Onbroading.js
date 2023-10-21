@@ -1,11 +1,30 @@
-import React from 'react';
-import { ImageBackground, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Onboarding = ({ navigation }) => {
+  const [isAlreadyUser, setIsAlreadyUser] = useState(false);
 
-  const handleInscriptionClick = () => {
-    navigation.navigate('Register');
+  useEffect(() => {
+
+
+    checkAlreadyUsers();
+  }, []);
+  
+  const checkAlreadyUsers = async () => {
+    const alreadyUsers = await AsyncStorage.getItem('alreadyUsers');
+    if (alreadyUsers === 'true') {
+      setIsAlreadyUser(true);
+    }
+  };
+
+  const handleButtonClick = () => {
+    if (isAlreadyUser) {
+      navigation.navigate('Login');
+    } else {
+      navigation.navigate('Register');
+    }
   };
 
   return (
@@ -20,9 +39,9 @@ const Onboarding = ({ navigation }) => {
         <Text style={styles.subtitle}>
           Join our community of drivers and boost your earnings exceptionally. Get ready for an exciting adventure! Join us now!
         </Text>
-        <TouchableOpacity style={styles.inscription} onPress={handleInscriptionClick}>
+        <TouchableOpacity style={styles.inscription} onPress={handleButtonClick}>
           <Text>
-            Sign Up
+            {isAlreadyUser ? "Sign In" : "Sign Up"}
           </Text>
         </TouchableOpacity>
       </LinearGradient>
@@ -43,7 +62,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     marginBottom: 20,
-    marginHorizontal:5
+    marginHorizontal: 5
   },
   Linear: {
     height: "70%",
