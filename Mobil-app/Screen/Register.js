@@ -1,10 +1,12 @@
 import { Button, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import React from 'react'
+import React, { useState } from 'react'
+import { apiUrl } from '../Constantes';
 
 const Register = ({ navigation }) => {
 
+  const [Mail, setMail] = useState('')
   const SignupSchema = Yup.object().shape({
     lastname: Yup.string()
       .min(2, 'Too Short!')
@@ -33,8 +35,37 @@ const Register = ({ navigation }) => {
   });
 
   const createUser = async (userData) => {
-    navigation.navigate('Profil', { userData })
+    console.log(Mail);
+
+    const url = `${apiUrl}/checkEmailExists`;
+
+    try {
+      // Send a request to check if the email exists
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: Mail }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        if (data.exists) {
+          console.log('Email already exists.');
+        } else {
+          navigation.navigate('Profil', { userData });
+        }
+      } else {
+        console.error('Error checking email existence.');
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+    }
   };
+
+
 
   const handleTextClick = () => {
     navigation.navigate('Login')
@@ -58,13 +89,15 @@ const Register = ({ navigation }) => {
               }}
               onSubmit={async (values, { setSubmitting }) => {
                 const { lastname, firstname, email, password } = values;
+                const mail = values.email;
                 const userData = {
                   lastname,
                   firstname,
                   email,
                   password,
                 };
-                console.log(userData);
+                console.log(mail);
+                setMail(mail);
                 await createUser(userData);
                 setSubmitting(false);
               }}
@@ -119,9 +152,20 @@ const Register = ({ navigation }) => {
                     style={styles.input}
                   />
 
-                  <Text style={{ textAlign: 'left', marginTop: 5 }}>
-                    Password
-                  </Text>
+                  <View style={{ display: 'flex', flexDirection: "row", alignItems: "center", marginTop: 5 }}>
+                    <Text style={{ textAlign: 'left' }}>
+                      Password
+                    </Text>
+                    {touched.password && errors.password && (
+                      <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 35 }}>
+                        <Text style={{
+                          color: "#B22222",
+                          marginHorizontal: 10,
+                        }}>{errors.password}</Text>
+                      </View>
+                    )}
+                  </View>
+
                   <TextInput
                     name="password"
                     placeholder='   ******'
@@ -132,7 +176,6 @@ const Register = ({ navigation }) => {
                     style={styles.input}
                   />
 
-                  {touched.password && errors.password && <Text style={styles.erro}>{errors.password}</Text>}
 
                   <View style={{ display: 'flex', flexDirection: "row", alignItems: "center", marginTop: 5 }}>
                     <Text style={{ textAlign: 'left' }}>
@@ -218,7 +261,7 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   erro: {
-    color: "black",
+    color: "#B22222",
     marginHorizontal: 10
   }
 })

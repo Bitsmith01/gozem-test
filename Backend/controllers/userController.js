@@ -42,6 +42,28 @@ exports.createUser = async (req, res) => {
   }
 };
 
+
+// Check if a user with the given email exists
+exports.checkEmailExists = async (req, res) => {
+  const { email } = req.body;
+  console.log(email);
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      // An existing user with this email already exists
+      res.status(200).json({ exists: true });
+    } else {
+      // No user with this email exists
+      res.status(200).json({ exists: false });
+    }
+  } catch (err) {
+    // Error while checking the email
+    res.status(500).json({ error: 'Error while checking the email' });
+  }
+};
+
+
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
@@ -65,48 +87,6 @@ exports.getUserById = async (req, res) => {
 };
 
 // Get user home screen data
-// exports.getHomscreen = async (req, res) => {
-//   const userId = req.user.userId;
-//   console.log(userId);
-//   try {
-//     const user = await User.findById(userId, '-password');
-//     console.log(user);
-
-//     if (user) {
-//       const homeScreenData = [
-//         {
-//           type: "profile",
-//           content: {
-//             image: user.image,
-//             name: `${user.firstname} ${user.lastname}`,
-//             email: user.email,
-//           }
-//         },
-//         {
-//           type: "map",
-//           content: {
-//             title: "Location",
-//             pin: user.image,
-//           }
-//         },
-//         {
-//           type: "data",
-//           content: {
-//             title: "Information",
-//             source: "wss://echo.websocket.org",
-//             value: "Loading..."
-//           }
-//         }
-//       ];
-
-//       res.status(200).json(homeScreenData);
-//     } else {
-//       res.status(404).json({ error: 'User not found' });
-//     }
-//   } catch (err) {
-//     res.status(500).json({ error: 'Unable to retrieve user' });
-//   }
-// }
 
 exports.Homscreen = async (req, res) => {
   const userId = req.user.userId;

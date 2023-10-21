@@ -20,27 +20,37 @@ const Home = ({ navigation }) => {
     const [errorMsg, setErrorMsg] = useState(null);
 
     useEffect(() => {
-        (async () => {
-            
-            // Request permission to access the device's location
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
+        const fetchLocation = async () => {
+            try {
+                // Request permission to access the device's location
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                    return;
+                }
+
+                // Get the current device's location
+                let location = await Location.getCurrentPositionAsync({});
+                setPosition({
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                });
+                // console.log(position);
+                getUserinfo();
+            } catch (error) {
+                console.error('Error fetching user location:', error);
             }
+        };
 
-            // Get the current device's location
-            let location = await Location.getCurrentPositionAsync({});
-            setPosition({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            });
-            getUserinfo();
-        })();
+        // Function to fetch location and user information
+        const refreshLocationAndUserInfo = async () => {
+            fetchLocation();
+        };
 
-
+        // Set up the interval to refresh location and user information every 5 seconds
+        const locationRefreshInterval = setInterval(refreshLocationAndUserInfo, 3000);
 
         // Handle the back button press to confirm application exit
         const handleBackPress = () => {
@@ -67,8 +77,13 @@ const Home = ({ navigation }) => {
 
         const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-        return () => backHandler.remove();
+        // Clean up the interval and back button handler when the component unmounts
+        return () => {
+            clearInterval(locationRefreshInterval);
+            backHandler.remove();
+        };
     }, []);
+
 
     // Custom Activity Indicator component
     const CustomActivityIndicator = () => {
@@ -96,7 +111,7 @@ const Home = ({ navigation }) => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
+                    // console.log(data);
                     setUserinfo(data);
                 } else {
                     console.error('Failed to fetch user info');
