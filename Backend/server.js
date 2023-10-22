@@ -48,9 +48,9 @@ io.on('connection', (socket) => {
 
   socket.on('message', async (data) => {
     messageCount++;
-    console.log(`Received ${messageCount} 'message' event(s) from the client`);
-
-    socket.emit('messageCount', messageCount);
+    // console.log(`Received ${messageCount} 'message' event(s) from the client`);
+    // console.log(messageCount);
+    io.emit('messageCount', messageCount);
 
     console.log('Message reçu du client :', JSON.stringify(data));
   });

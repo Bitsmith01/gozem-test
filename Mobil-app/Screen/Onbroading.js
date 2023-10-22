@@ -7,21 +7,19 @@ const Onboarding = ({ navigation }) => {
   const [isAlreadyUser, setIsAlreadyUser] = useState(false);
 
   useEffect(() => {
-
-
     checkAlreadyUsers();
   }, []);
-  
+
   const checkAlreadyUsers = async () => {
-    const alreadyUsers = await AsyncStorage.getItem('alreadyUsers');
-    if (alreadyUsers === 'true') {
+    const token = await AsyncStorage.getItem('userToken');
+    if (token) {
       setIsAlreadyUser(true);
     }
   };
 
   const handleButtonClick = () => {
     if (isAlreadyUser) {
-      navigation.navigate('Login');
+      navigation.navigate('Home');
     } else {
       navigation.navigate('Register');
     }
@@ -34,7 +32,7 @@ const Onboarding = ({ navigation }) => {
         style={styles.Linear}
       >
         <Text style={styles.Welcome}>
-          Welcome, champion !
+          Welcome, champion!
         </Text>
         <Text style={styles.subtitle}>
           Join our community of drivers and boost your earnings exceptionally. Get ready for an exciting adventure! Join us now!
@@ -62,19 +60,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     marginBottom: 20,
-    marginHorizontal: 5
+    marginHorizontal: 5,
   },
   Linear: {
     height: "70%",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 250
+    paddingTop: 250,
   },
   Welcome: {
     fontSize: 35,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
   },
   inscription: {
     backgroundColor: 'white',
@@ -82,7 +80,7 @@ const styles = StyleSheet.create({
     width: 120,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20
+    borderRadius: 20,
   },
 });
 

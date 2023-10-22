@@ -34,7 +34,7 @@ const Profil = ({ navigation, route }) => {
 
     const handleFinishRegistration = async () => {
         if (image) {
-            setIsLoading(true); // Activer l'indicateur de chargement
+            setIsLoading(true);
 
             const cloudName = 'diblduqup';
 

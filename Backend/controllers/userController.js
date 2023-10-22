@@ -97,9 +97,6 @@ exports.Homscreen = async (req, res) => {
           }
         }
       ];
-
-
-
       res.status(200).json(homeScreenData);
     } else {
       res.status(404).json({ error: 'User not found' });

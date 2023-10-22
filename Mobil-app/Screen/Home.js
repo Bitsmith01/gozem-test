@@ -5,10 +5,12 @@ import React, { useEffect, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { apiUrl } from '../Constantes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import io from 'socket.io-client';
 
 const Home = ({ navigation }) => {
     const [Userinfo, setUserinfo] = useState(null);
     const [Isloading, setIsloading] = useState(true);
+    const [messages, setMessages] = useState(null); // Changed to initialize messages as null
 
     const [position, setPosition] = useState({
         latitude: null,
@@ -18,39 +20,32 @@ const Home = ({ navigation }) => {
     });
 
     const [errorMsg, setErrorMsg] = useState(null);
+    const socket = io("http://192.168.102.93:5000");
 
     useEffect(() => {
+        // Function to fetch location and user information
         const fetchLocation = async () => {
             try {
-                // Request permission to access the device's location
-                let { status } = await Location.requestForegroundPermissionsAsync();
+                const { status } = await Location.requestForegroundPermissionsAsync();
                 if (status !== 'granted') {
                     setErrorMsg('Permission to access location was denied');
                     return;
                 }
 
-                // Get the current device's location
-                let location = await Location.getCurrentPositionAsync({});
+                const location = await Location.getCurrentPositionAsync({});
+                const socket = io("http://192.168.102.93:5000");
+                socket.emit('message', { longitude: location.coords.longitude, latitude: location.coords.latitude });
                 setPosition({
                     latitude: location.coords.latitude,
                     longitude: location.coords.longitude,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 });
-                // console.log(position);
                 getUserinfo();
             } catch (error) {
                 console.error('Error fetching user location:', error);
             }
         };
-
-        // Function to fetch location and user information
-        const refreshLocationAndUserInfo = async () => {
-            fetchLocation();
-        };
-
-        // Set up the interval to refresh location and user information every 5 seconds
-        const locationRefreshInterval = setInterval(refreshLocationAndUserInfo, 3000);
 
         // Handle the back button press to confirm application exit
         const handleBackPress = () => {
@@ -75,15 +70,22 @@ const Home = ({ navigation }) => {
             return true;
         };
 
+        socket.on('messageCount', (messageCount) => {
+            setMessages((prevmessages) => prevmessages + 1);
+            // console.log('Message receive from serveur :', messages);
+        });
+
+
         const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-        // Clean up the interval and back button handler when the component unmounts
+        const locationRefreshInterval = setInterval(fetchLocation, 3000);
+
         return () => {
             clearInterval(locationRefreshInterval);
             backHandler.remove();
+            socket.disconnect();
         };
     }, []);
-
 
     // Custom Activity Indicator component
     const CustomActivityIndicator = () => {
@@ -98,7 +100,6 @@ const Home = ({ navigation }) => {
     const getUserinfo = async () => {
         try {
             const url = `${apiUrl}/Home`;
-
             const token = await AsyncStorage.getItem('userToken');
             if (token) {
                 const headers = {
@@ -117,7 +118,7 @@ const Home = ({ navigation }) => {
                     console.error('Failed to fetch user info');
                 }
             } else {
-                console.error('Token not found in AsyncStorage');
+                
             }
         } catch (error) {
             console.error('Error fetching user info:', error);
@@ -126,7 +127,7 @@ const Home = ({ navigation }) => {
         }
     };
 
-    //Logout function
+    // Logout function
     const Logout = async () => {
         Alert.alert(
             'Confirm Logout',
@@ -205,9 +206,13 @@ const Home = ({ navigation }) => {
                         {Userinfo && (
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <View style={{ marginLeft: 5 }}>
-                                    <Text style={{ marginVertical: 5 }}>Title: {Userinfo[2].content.title}</Text>
-                                    <Text style={{ marginVertical: 5 }}>Source: {Userinfo[2].content.source}</Text>
-                                    <Text style={{ marginVertical: 5 }}>Value: {Userinfo[2].content.value}</Text>
+                                    <Text style={{ marginVertical: 5, fontSize: 16 }}
+                                    >Title: {Userinfo[2].content.title}</Text>
+                                    <Text style={{ marginVertical: 5, fontSize: 16 }}
+                                    >Source: {Userinfo[2].content.source}</Text>
+                                    <Text style={{ marginVertical: 5, fontSize: 16 }}
+                                    >
+                                        Value: {messages ? `${messages} received from the WebSocket server` : Userinfo[2].content.value}                                    </Text>
                                 </View>
                             </View>
                         )}
