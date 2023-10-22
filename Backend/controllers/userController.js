@@ -69,11 +69,8 @@ exports.getUserById = async (req, res) => {
 
 exports.Homscreen = async (req, res) => {
   const userId = req.user.userId;
-  console.log(userId);
   try {
     const user = await User.findById(userId, '-password');
-    console.log(user);
-
     if (user) {
       const homeScreenData = [
         {
@@ -101,7 +98,7 @@ exports.Homscreen = async (req, res) => {
         }
       ];
 
-      console.log(homeScreenData);
+
 
       res.status(200).json(homeScreenData);
     } else {
