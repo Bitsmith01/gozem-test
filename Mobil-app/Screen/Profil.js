@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { apiUrl } from '../Constantes';
 
@@ -7,6 +7,8 @@ import { apiUrl } from '../Constantes';
 const Profil = ({ navigation, route }) => {
     const { userData } = route.params;
     const [image, setImage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
 
     const handleImageUpload = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -32,6 +34,8 @@ const Profil = ({ navigation, route }) => {
 
     const handleFinishRegistration = async () => {
         if (image) {
+            setIsLoading(true); // Activer l'indicateur de chargement
+
             const cloudName = 'diblduqup';
 
             const formData = new FormData();
@@ -77,7 +81,6 @@ const Profil = ({ navigation, route }) => {
                         } catch (error) {
                             console.error('Error creating the user:', error);
                         }
-
                     } else {
                         console.error('Failed to upload image to Cloudinary.');
                     }
@@ -86,9 +89,12 @@ const Profil = ({ navigation, route }) => {
                 }
             } catch (error) {
                 console.error('Error uploading image to Cloudinary:', error);
+            } finally {
+                setIsLoading(false);
             }
         }
     };
+
 
 
     return (
@@ -110,9 +116,13 @@ const Profil = ({ navigation, route }) => {
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.signupButton} onPress={handleFinishRegistration}>
-                        <Text style={{ textAlign: 'center', color: 'white' }}>
-                            Finish Registration
-                        </Text>
+                        {isLoading ? (
+                            <ActivityIndicator size="large" color="white" />
+                        ) : (
+                            <Text style={{ textAlign: 'center', color: 'white' }}>
+                                Finish Registration
+                            </Text>
+                        )}
                     </TouchableOpacity>
                 </View>
             )}

@@ -8,24 +8,6 @@ const SECRET_KEY = "4715aed3c946f7b0lokoa38e6b534astan958362x8d84e96d10fbc047007
 exports.createUser = async (req, res) => {
   try {
     const { firstname, lastname, email, password, image } = req.body;
-
-    if (!validator.isAlpha(firstname)) {
-      return res.status(400).json({ error: 'First name should contain only letters' });
-    }
-
-    if (!validator.isAlpha(lastname)) {
-      return res.status(400).json({ error: 'Last name should contain only letters' });
-    }
-
-    if (!validator.isEmail(email)) {
-      return res.status(400).json({ error: 'Invalid email address' });
-    }
-
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'User already exists!' });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       firstname: firstname,
@@ -51,14 +33,11 @@ exports.checkEmailExists = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      // An existing user with this email already exists
       res.status(200).json({ exists: true });
     } else {
-      // No user with this email exists
       res.status(200).json({ exists: false });
     }
   } catch (err) {
-    // Error while checking the email
     res.status(500).json({ error: 'Error while checking the email' });
   }
 };

@@ -1,4 +1,4 @@
-import { Button, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Button, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import React, { useState } from 'react'
@@ -9,10 +9,12 @@ const Register = ({ navigation }) => {
   const [Mail, setMail] = useState('')
   const SignupSchema = Yup.object().shape({
     lastname: Yup.string()
+      .matches(/^[a-zA-Z0-9]+$/, 'Last name must be alphanumeric')
       .min(2, 'Too Short!')
       .max(50, 'Too Long!')
       .required('Your First name\'s required !'),
     firstname: Yup.string()
+      .matches(/^[a-zA-Z0-9]+$/, 'First name must be alphanumeric')
       .min(2, 'Too Short!')
       .max(50, 'Too Long!')
       .required('Your Last name\'s required !'),
@@ -40,7 +42,7 @@ const Register = ({ navigation }) => {
     const url = `${apiUrl}/checkEmailExists`;
 
     try {
-      // Send a request to check if the email exists
+      // Check if the email exists
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -53,6 +55,7 @@ const Register = ({ navigation }) => {
         const data = await response.json();
         console.log(data);
         if (data.exists) {
+          Alert.alert('Error', 'The email address is already in use. Please choose another one.');
           console.log('Email already exists.');
         } else {
           navigation.navigate('Profil', { userData });
