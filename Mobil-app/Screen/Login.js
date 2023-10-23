@@ -43,6 +43,7 @@ const Login = ({ navigation }) => {
 
         console.log('User Login successfully');
         navigation.navigate('Home');
+        
       } else {
         console.error('Failed to log the user');
       }
@@ -73,6 +74,7 @@ const Login = ({ navigation }) => {
               console.log(userData);
               await logUser(userData);
               setSubmitting(false);
+              setIsLoading(false);
             }}
           >
             {({ handleSubmit, values, errors, touched, handleChange, isValid, setFieldTouched, handleBlur }) => (
