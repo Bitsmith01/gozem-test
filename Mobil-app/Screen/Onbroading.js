@@ -19,7 +19,7 @@ const Onboarding = ({ navigation }) => {
 
   const handleButtonClick = () => {
     if (isAlreadyUser) {
-      navigation.navigate('Home');
+      navigation.navigate('Login');
     } else {
       navigation.navigate('Register');
     }
