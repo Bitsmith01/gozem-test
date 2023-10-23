@@ -10,7 +10,7 @@ import io from 'socket.io-client';
 const Home = ({ navigation }) => {
     const [Userinfo, setUserinfo] = useState(null);
     const [Isloading, setIsloading] = useState(true);
-    const [messages, setMessages] = useState(null); // Changed to initialize messages as null
+    const [messages, setMessages] = useState(null); 
 
     const [position, setPosition] = useState({
         latitude: null,
@@ -20,7 +20,7 @@ const Home = ({ navigation }) => {
     });
 
     const [errorMsg, setErrorMsg] = useState(null);
-    const socket = io("http://192.168.102.93:5000");
+    const socket = io("https://gozem-2w2m.onrender.com");
 
     useEffect(() => {
         // Function to fetch location and user information
@@ -33,7 +33,7 @@ const Home = ({ navigation }) => {
                 }
 
                 const location = await Location.getCurrentPositionAsync({});
-                const socket = io("http://192.168.102.93:5000");
+                const socket = io("https://gozem-2w2m.onrender.com");
                 socket.emit('message', { longitude: location.coords.longitude, latitude: location.coords.latitude });
                 setPosition({
                     latitude: location.coords.latitude,

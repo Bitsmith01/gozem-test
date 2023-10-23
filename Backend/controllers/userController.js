@@ -92,7 +92,7 @@ exports.Homscreen = async (req, res) => {
           type: "data",
           content: {
             title: "Information",
-            source: "wss://echo.websocket.org",
+            source: "https://gozem-2w2m.onrender.com",
             value: "Loading..."
           }
         }
