@@ -39,7 +39,7 @@ Before you begin, ensure you have met the following requirements:
 ```
 ### API Endpoints and User Management
 
-- **Base URL:** `http://your-localip:5000`
+- **Base URL:** `https://gozem-2w2m.onrender.com/`
 
 - **POST /api/users/Register**
   - Description: Create a new user.
@@ -92,7 +92,7 @@ Before you begin, ensure you have met the following requirements:
 
 WebSockets are used to facilitate real-time communication with client applications. The server listens for WebSocket connections and handles messages between the server and connected clients.
 
-- **WebSocket URL:** `ws://your-localip:5000`
+- **WebSocket URL:** `https://gozem-2w2m.onrender.com/`
 
 #### WebSocket Events
 
@@ -127,24 +127,12 @@ Before you get started, make sure you have the following:
      git clone git@github.com:Bitsmith01/gozem-test.git
 ```
 
-2. _Install all dependencies & start app_
+2. _Install all dependencies_
 
 ```bash
     cd Mobil-app
     npm install
 ```
-
-2. _Configuration_
-
-You will need your computer's local IP address, which is essential for testing the app on a physical device connected to the same network.
-
-- **Get your computer Ip**
-  for linux: ip addr show
-  for windows : ipconfig
-
-- **Set the local ip \***
-  Go to /Mobile-App/constantes/index.js and add your local address on base url
-
 3. _Start your expo_
 
 ```bash
