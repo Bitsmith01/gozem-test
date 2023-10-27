@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server); // Attachez Socket.io au serveur HTTP
+const io = socketIo(server);
 
 const port = 5000;
 
